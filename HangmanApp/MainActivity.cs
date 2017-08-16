@@ -5,6 +5,13 @@ using System.IO;
 using SQLite;
 using Android.Graphics;
 
+/*
+ * TODO:Create optional logout or log into new account
+ * Fix Login for options
+ * TODO: Create game interface
+ * TODO: Create scoring system
+ */
+
 namespace HangmanApp
 {
     [Activity(Label = "HangmanApp", MainLauncher = true, Icon = "@drawable/icon")]

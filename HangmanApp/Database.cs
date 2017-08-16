@@ -78,9 +78,11 @@ namespace HangmanApp
             if (check && logInAccount != null)
             {
                 //account already exists just load it
+                //deal with game options. 1 copy of options should be id 1 and will be default options for game when loading an existing profile the options stored in profile are loaded
                 db.CreateTable<Options>();
                 var optionsTable = db.Table<Options>();
                 Options o = optionsTable.FirstOrDefault();
+                logInAccount.AccountOptions = db.Get<Options>(opt => opt.ID == logInAccount.AccountOptionsID);
                 o.Difficulty = logInAccount.AccountOptions.Difficulty;
                 o.IsLoggedIn = true;
                 o.LoggedInAccountID = logInAccount.ID;
@@ -95,13 +97,23 @@ namespace HangmanApp
                 logInAccount.HighestScore = 0;
                 logInAccount.Username = username;
                 db.Insert(logInAccount);
+
+                //deal with game options. 1 copy of options should be id 1 and will be default options for game when loading an existing profile the options stored in profile are loaded
                 db.CreateTable<Options>();
                 var optionsTable = db.Table<Options>();
-                Options o = optionsTable.FirstOrDefault(); //default options will always be first because it should be automatically inserted when the app is first run
+
+                //default options will always be first because it should be automatically inserted when the app is first run
+                Options o = optionsTable.FirstOrDefault(); 
                 o.Difficulty = logInAccount.AccountOptions.Difficulty;
                 o.IsLoggedIn = true;
+                logInAccount.AccountOptions.IsLoggedIn = true;
+                logInAccount.AccountOptions.LoggedInAccountID = logInAccount.ID;
+
                 o.LoggedInAccountID = logInAccount.ID;
                 db.Update(o);
+
+                //finally insert options created in new account
+                int test = db.Insert(logInAccount.AccountOptions);
                 return false; //false just means account wasn't found.
             }
             throw new Exception("Unexpected Code Path");

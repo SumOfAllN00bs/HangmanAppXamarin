@@ -18,8 +18,8 @@ namespace HangmanApp
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.Game);
 
-            // Create your application here
         }
     }
 }
