@@ -15,6 +15,7 @@ namespace HangmanApp
     [Activity(Label = "GameActivity")]
     public class GameActivity : Activity
     {
+        Database db = new Database();
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);

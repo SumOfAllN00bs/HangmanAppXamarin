@@ -38,6 +38,7 @@ namespace HangmanApp
             }
             db.Login(edt_Username.Text);
             StartActivity(typeof(GameActivity));
+            Finish();
         }
     }
 }

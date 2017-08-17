@@ -84,13 +84,14 @@ namespace HangmanApp
                 Options o = optionsTable.FirstOrDefault();
                 logInAccount.AccountOptions = db.Get<Options>(opt => opt.ID == logInAccount.AccountOptionsID);
                 o.Difficulty = logInAccount.AccountOptions.Difficulty;
-                o.IsLoggedIn = true;
+                o.IsLoggedIn = true;//I probably don't need this anymore I just have to
                 o.LoggedInAccountID = logInAccount.ID;
                 db.Update(o);
                 return true;
             }
             else if (logInAccount == null)
             {
+                //the following is a little convoluted I honestly don't know if there is a simpler way to do this
                 //account doesn't exist create new one then load it
                 logInAccount = new Account();
                 logInAccount.AccountOptions = new Options();
@@ -113,7 +114,11 @@ namespace HangmanApp
                 db.Update(o);
 
                 //finally insert options created in new account
-                int test = db.Insert(logInAccount.AccountOptions);
+                int newAccountOptionsID = db.Insert(logInAccount.AccountOptions);
+                logInAccount.AccountOptionsID = newAccountOptionsID;
+                db.Update(logInAccount); // after already inserting the new account I have to update it aftwards with the id of the accountoptions that I get back after inserting the account options
+                //there has got to be a better way :)
+
                 return false; //false just means account wasn't found.
             }
             throw new Exception("Unexpected Code Path");
