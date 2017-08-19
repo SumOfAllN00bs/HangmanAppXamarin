@@ -9,6 +9,7 @@ using Android.Views;
 /*
  * TODO: Create game interface
  * TODO: Create scoring system
+ * TODO: Make sure all ui with text to use same font
  */
 
 namespace HangmanApp
