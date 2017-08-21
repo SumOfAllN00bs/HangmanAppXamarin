@@ -51,6 +51,7 @@ namespace HangmanApp
                     btn_newButton.Text = c.ToString().ToUpper();
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
                     param.SetMargins(1, 2, 0, 1);
+                    param.Weight = 1;
                     item.AddView(btn_newButton, param);
                     QwertyList.Add(btn_newButton);
                 }
