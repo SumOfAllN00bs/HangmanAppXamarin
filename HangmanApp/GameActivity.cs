@@ -28,38 +28,34 @@ namespace HangmanApp
             qRow = FindViewById<LinearLayout>(Resource.Id.ll_Qrow);
             aRow = FindViewById<LinearLayout>(Resource.Id.ll_Arow);
             zRow = FindViewById<LinearLayout>(Resource.Id.ll_Zrow);
-            Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
+            //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
 
-            foreach (char c in "qwertyuiop")
+            foreach (LinearLayout item in new List<LinearLayout>() { qRow, aRow, zRow })
             {
-                Button btn_newButton = new Button(this);
-                btn_newButton.Text = c.ToString().ToUpper();
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                param.SetMargins(1, 5, 0, 5);
-                qRow.AddView(btn_newButton, param);
-                QwertyList.Add(btn_newButton);
+                string rowOfCharacters = "";
+                if (item == qRow)
+                {
+                    rowOfCharacters = "qwertyuiop";
+                }
+                if (item == aRow)
+                {
+                    rowOfCharacters = "asdfghjkl";
+                }
+                if (item == zRow)
+                {
+                    rowOfCharacters = "zxcvbnm";
+                }
+                foreach (char c in rowOfCharacters)
+                {
+                    Button btn_newButton = new Button(this);
+                    btn_newButton.Text = c.ToString().ToUpper();
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                    param.SetMargins(1, 2, 0, 1);
+                    item.AddView(btn_newButton, param);
+                    QwertyList.Add(btn_newButton);
+                }
+                item.SetGravity(GravityFlags.CenterHorizontal);
             }
-            foreach (char c in "asdfghjkl")
-            {
-                Button btn_newButton = new Button(this);
-                btn_newButton.Text = c.ToString().ToUpper();
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                param.SetMargins(1, 5, 0, 5);
-                aRow.AddView(btn_newButton, param);
-                QwertyList.Add(btn_newButton);
-            }
-            foreach (char c in "zxcvbnm")
-            {
-                Button btn_newButton = new Button(this);
-                btn_newButton.Text = c.ToString().ToUpper();
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                param.SetMargins(1, 5, 0, 5);
-                zRow.AddView(btn_newButton, param);
-                QwertyList.Add(btn_newButton);
-            }
-            qRow.SetGravity(GravityFlags.CenterHorizontal);
-            aRow.SetGravity(GravityFlags.CenterHorizontal);
-            zRow.SetGravity(GravityFlags.CenterHorizontal);
         }
     }
 }

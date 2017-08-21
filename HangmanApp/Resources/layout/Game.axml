@@ -14,16 +14,15 @@
         android:layout_height="match_parent"
         android:id="@+id/ll_TopLayout">
         <TextView
-            android:text="Large Text"
+            android:text="_ _ _ _ _ _ _ _"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="55"
             android:id="@+id/txt_WordDisplay"
-            android:layout_marginBottom="50dp"
-            android:layout_marginTop="15dp"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/black" />
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center" />
         <LinearLayout
             android:orientation="horizontal"
             android:minWidth="25px"

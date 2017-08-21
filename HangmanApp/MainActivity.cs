@@ -5,6 +5,7 @@ using System.IO;
 using SQLite;
 using Android.Graphics;
 using Android.Views;
+using System.Collections.Generic;
 
 /*
  * TODO: Create game interface
@@ -32,14 +33,18 @@ namespace HangmanApp
             txt_Welcome = FindViewById<TextView>(Resource.Id.txt_Welcome);
             btn_Start = FindViewById<Button>(Resource.Id.btn_Start);
             btn_LogOut = FindViewById<Button>(Resource.Id.btn_LogOut);
-
-            var font = Typeface.CreateFromAsset(Assets, "iosevka-regular.ttf");
+            
             if (db.IsLoggedIn())
             {
                 txt_Welcome.Text = "Welcome " + db.LoggedInAccount(this).Username + " To The HangMan Game";
                 btn_LogOut.Visibility = ViewStates.Visible;
             }
-            btn_Start.Typeface = font;
+            Helper.SetFonts(Assets, new List<View>()
+                                    {
+                                        txt_Welcome,
+                                        btn_Start,
+                                        btn_LogOut
+                                    });
             btn_Start.Click += Btn_Start_Click;
             btn_LogOut.Click += Btn_LogOut_Click;
         }
