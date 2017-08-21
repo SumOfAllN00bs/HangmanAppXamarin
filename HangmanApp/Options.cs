@@ -25,7 +25,7 @@ namespace HangmanApp
         {
             IsLoggedIn = false;
             LoggedInAccountID = null;
-            Difficulty = 1;
+            Difficulty = 1; //1 = easy, 2 = normal, 3 = hard
         }
     }
 }

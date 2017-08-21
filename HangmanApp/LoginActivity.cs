@@ -17,6 +17,10 @@ namespace HangmanApp
     {
         EditText edt_Username;
         Button btn_Login;
+        RadioButton rb_Easy;
+        RadioButton rb_Normal;
+        RadioButton rb_Hard;
+        int difficulty = 2;
         Database db;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -25,8 +29,33 @@ namespace HangmanApp
             db = new Database();
             edt_Username = FindViewById<EditText>(Resource.Id.edt_Username);
             btn_Login = FindViewById<Button>(Resource.Id.btn_Login);
+            rb_Easy = FindViewById<RadioButton>(Resource.Id.rb_Easy);
+            rb_Normal = FindViewById<RadioButton>(Resource.Id.rb_Normal);
+            rb_Hard = FindViewById<RadioButton>(Resource.Id.rb_Hard);
 
             btn_Login.Click += Btn_Login_Click;
+            rb_Easy.Click += Rb_Difficulty_Click;
+            rb_Normal.Click += Rb_Difficulty_Click;
+            rb_Hard.Click += Rb_Difficulty_Click;
+        }
+
+        private void Rb_Difficulty_Click(object sender, EventArgs e)
+        {
+            RadioButton rb = (RadioButton)sender;
+            switch (rb.Text)
+            {
+                case "Easy":
+                    difficulty = 1;
+                    break;
+                case "Normal":
+                    difficulty = 2;
+                    break;
+                case "Hard":
+                    difficulty = 3;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Btn_Login_Click(object sender, EventArgs e)
@@ -36,7 +65,7 @@ namespace HangmanApp
                 Toast.MakeText(this, "Please enter a valid username", ToastLength.Short).Show();
                 return;
             }
-            db.Login(edt_Username.Text);
+            db.Login(edt_Username.Text, difficulty);
             StartActivity(typeof(GameActivity));
             Finish();
         }

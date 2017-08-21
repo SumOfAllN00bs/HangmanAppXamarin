@@ -58,7 +58,15 @@ namespace HangmanApp
                 return null;
             }
         }
-        public bool Login(string username) //perform the action of logging in
+        public Options CurrentOptions(Context activity)
+        {
+            SQLiteConnection db = new SQLiteConnection(dbPath);
+            db.CreateTable<Options>();
+            var table = db.Table<Options>();
+            Options _options = table.FirstOrDefault();
+            return _options;
+        }
+        public bool Login(string username, int difficulty) //perform the action of logging in
         {
             SQLiteConnection db = new SQLiteConnection(dbPath);
             db.CreateTable<Account>();
@@ -84,6 +92,14 @@ namespace HangmanApp
                 Options o = optionsTable.FirstOrDefault();
                 logInAccount.AccountOptions = db.Get<Options>(opt => opt.ID == logInAccount.AccountOptionsID);
                 o.Difficulty = logInAccount.AccountOptions.Difficulty;
+                /*
+                 * Difficulty is loaded from saved account
+                 * don't know if this behaviour is what I want because it may be the case that
+                 * the user has an account which has a difficulty saved but chooses a new difficulty
+                 * be choosing to log in using another account but keep the difficulty they chose
+                 * this won't happen if you load the difficulty from the account that is saved
+                 * when you choose to log in
+                 */
                 o.IsLoggedIn = true;//I probably don't need this anymore I just have to
                 o.LoggedInAccountID = logInAccount.ID;
                 db.Update(o);
@@ -105,7 +121,7 @@ namespace HangmanApp
 
                 //default options will always be first because it should be automatically inserted when the app is first run
                 Options o = optionsTable.FirstOrDefault(); 
-                o.Difficulty = logInAccount.AccountOptions.Difficulty;
+                o.Difficulty = difficulty;
                 o.IsLoggedIn = true;
                 logInAccount.AccountOptions.IsLoggedIn = true;
                 logInAccount.AccountOptions.LoggedInAccountID = logInAccount.ID;
