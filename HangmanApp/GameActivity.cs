@@ -24,12 +24,17 @@ namespace HangmanApp
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Game);
+            string dbPath = Helper.GetLocalFilePath("words.db3");
+            Database db_Words = new Database(dbPath);
             QwertyList = new List<Button>();
             qRow = FindViewById<LinearLayout>(Resource.Id.ll_Qrow);
             aRow = FindViewById<LinearLayout>(Resource.Id.ll_Arow);
             zRow = FindViewById<LinearLayout>(Resource.Id.ll_Zrow);
+
             //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
 
+            Toast.MakeText(this, db_Words.GetRandomWord(db.CurrentOptions(this).Difficulty), ToastLength.Long).Show();
+            
             foreach (LinearLayout item in new List<LinearLayout>() { qRow, aRow, zRow })
             {
                 string rowOfCharacters = "";
@@ -51,7 +56,6 @@ namespace HangmanApp
                     btn_newButton.Text = c.ToString().ToUpper();
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
                     param.SetMargins(1, 2, 0, 1);
-                    param.Weight = 1;
                     item.AddView(btn_newButton, param);
                     QwertyList.Add(btn_newButton);
                 }

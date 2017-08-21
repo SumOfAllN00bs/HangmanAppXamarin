@@ -14,16 +14,35 @@ using System.IO;
 
 namespace HangmanApp
 {
+    //probably should use two types of database instead just gonna reuse code in place
     public class Database
     {
         string dbPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "dbHangman.db3");
-
-        public Database()
+        private bool isWordDatabase = false;
+        Random chaos = new Random();
+        public bool IsWordDatabase
         {
+            get
+            {
+                return isWordDatabase;
+            }
+        }
+
+        public Database(string _dbPath = "")
+        {
+            if (!(_dbPath == ""))
+            {
+                dbPath = _dbPath;
+                isWordDatabase = true;
+            }
         }
 
         public bool IsLoggedIn()
         {
+            if (IsWordDatabase)
+            {
+                return false;
+            }
             SQLiteConnection db = new SQLiteConnection(dbPath);
             db.CreateTable<Options>();
             var table = db.Table<Options>();
@@ -36,6 +55,10 @@ namespace HangmanApp
 
         public Account LoggedInAccount(Context activity)
         {
+            if (IsWordDatabase)
+            {
+                return null;
+            }
             if (IsLoggedIn())
             {
                 SQLiteConnection db = new SQLiteConnection(dbPath);
@@ -60,6 +83,10 @@ namespace HangmanApp
         }
         public Options CurrentOptions(Context activity)
         {
+            if (IsWordDatabase)
+            {
+                return null;
+            }
             SQLiteConnection db = new SQLiteConnection(dbPath);
             db.CreateTable<Options>();
             var table = db.Table<Options>();
@@ -68,6 +95,10 @@ namespace HangmanApp
         }
         public bool Login(string username, int difficulty) //perform the action of logging in
         {
+            if (IsWordDatabase)
+            {
+                return false;
+            }
             SQLiteConnection db = new SQLiteConnection(dbPath);
             db.CreateTable<Account>();
             var table = db.Table<Account>();
@@ -139,6 +170,34 @@ namespace HangmanApp
             }
             throw new Exception("Unexpected Code Path");
             return false;
+        }
+        public string GetRandomWord(int difficulty)
+        {
+            string returnWord = "?ERROR?";
+            SQLiteConnection db = new SQLiteConnection(dbPath);
+            db.CreateTable<Word>();
+            var table = db.Table<Word>();
+
+            switch (difficulty)
+            {
+                case 1://easy
+                    //hardcoding actually makes the code way more simpler
+                    //122 is the first six letter word and 431 is the last eight letter word
+                    returnWord = table.ElementAt(chaos.Next(122, 431)).word; 
+                    break;
+                case 2://normal
+                    //1 is the first four letter word and 431 is the last eight letter word
+                    returnWord = table.ElementAt(chaos.Next(1, 431)).word;
+                    break;
+                case 3://hard
+                    //122 is the first six letter word and 431 is the last eight letter word
+                    returnWord = table.ElementAt(chaos.Next(1, 121)).word;
+
+                    break;
+                default:
+                    break;
+            }
+            return returnWord;
         }
     }
 }
