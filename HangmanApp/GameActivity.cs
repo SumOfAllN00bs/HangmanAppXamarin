@@ -20,6 +20,7 @@ namespace HangmanApp
         LinearLayout aRow;
         LinearLayout zRow;
         List<Button> QwertyList;
+        ImageView bckGround;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -30,6 +31,7 @@ namespace HangmanApp
             qRow = FindViewById<LinearLayout>(Resource.Id.ll_Qrow);
             aRow = FindViewById<LinearLayout>(Resource.Id.ll_Arow);
             zRow = FindViewById<LinearLayout>(Resource.Id.ll_Zrow);
+            bckGround = FindViewById<ImageView>(Resource.Id.img_GameBackground);
 
             //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
 
@@ -60,6 +62,8 @@ namespace HangmanApp
                     QwertyList.Add(btn_newButton);
                 }
                 item.SetGravity(GravityFlags.CenterHorizontal);
+                bckGround.SetImageResource(Resource.Drawable.BackGround);
+
             }
         }
     }

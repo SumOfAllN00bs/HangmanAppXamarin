@@ -182,6 +182,7 @@ namespace HangmanApp
             {
                 case 1://easy
                     //hardcoding actually makes the code way more simpler
+                    //as far as I can tell
                     //122 is the first six letter word and 431 is the last eight letter word
                     returnWord = table.ElementAt(chaos.Next(122, 431)).word; 
                     break;

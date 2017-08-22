@@ -2,11 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  android:id="@+id/mainLayout">
+    android:id="@+id/mainLayout">
     <ImageView
         android:id="@+id/img_Splash"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
         android:background="#00aadd"
         android:layout_margin="5dp" />
     <Button

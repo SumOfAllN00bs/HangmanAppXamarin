@@ -21,6 +21,7 @@ namespace HangmanApp
         TextView txt_Welcome;
         Button btn_Start;
         Button btn_LogOut;
+        ImageView bckGround;
         Database db;
 
         protected override void OnCreate(Bundle bundle)
@@ -33,6 +34,7 @@ namespace HangmanApp
             txt_Welcome = FindViewById<TextView>(Resource.Id.txt_Welcome);
             btn_Start = FindViewById<Button>(Resource.Id.btn_Start);
             btn_LogOut = FindViewById<Button>(Resource.Id.btn_LogOut);
+            bckGround = FindViewById<ImageView>(Resource.Id.img_Splash);
             
             if (db.IsLoggedIn())
             {
@@ -45,6 +47,7 @@ namespace HangmanApp
                                         btn_Start,
                                         btn_LogOut
                                     });
+            bckGround.SetImageResource(Resource.Drawable.BackGround);
             btn_Start.Click += Btn_Start_Click;
             btn_LogOut.Click += Btn_LogOut_Click;
         }

@@ -6,7 +6,12 @@
       android:id="@+id/img_OptionsBackground"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
+      android:scaleType="centerCrop"
       android:background="#00aadd"
       android:layout_margin="5dp" />
-
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent">
+  </LinearLayout>
 </RelativeLayout>

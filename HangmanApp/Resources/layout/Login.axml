@@ -6,6 +6,7 @@
         android:id="@+id/img_LoginBackground"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
         android:background="#00aadd"
         android:layout_margin="5dp" />
     <LinearLayout

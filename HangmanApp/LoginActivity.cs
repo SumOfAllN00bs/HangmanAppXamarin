@@ -21,6 +21,7 @@ namespace HangmanApp
         RadioButton rb_Normal;
         RadioButton rb_Hard;
         int difficulty = 2;
+        ImageView bckGround;
         Database db;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -32,11 +33,13 @@ namespace HangmanApp
             rb_Easy = FindViewById<RadioButton>(Resource.Id.rb_Easy);
             rb_Normal = FindViewById<RadioButton>(Resource.Id.rb_Normal);
             rb_Hard = FindViewById<RadioButton>(Resource.Id.rb_Hard);
+            bckGround = FindViewById<ImageView>(Resource.Id.img_LoginBackground);
 
             btn_Login.Click += Btn_Login_Click;
             rb_Easy.Click += Rb_Difficulty_Click;
             rb_Normal.Click += Rb_Difficulty_Click;
             rb_Hard.Click += Rb_Difficulty_Click;
+            bckGround.SetImageResource(Resource.Drawable.BackGround);
         }
 
         private void Rb_Difficulty_Click(object sender, EventArgs e)

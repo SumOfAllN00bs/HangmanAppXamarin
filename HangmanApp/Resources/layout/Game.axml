@@ -6,6 +6,7 @@
         android:id="@+id/img_GameBackground"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
         android:background="#00aadd"
         android:layout_margin="5dp" />
     <LinearLayout
@@ -58,12 +59,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" />
-          <LinearLayout
-              android:orientation="horizontal"
-              android:gravity="center"
-              android:layout_weight="30"
-              android:layout_width="0dp"
-              android:layout_height="0dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="30"
+                android:layout_width="0dp"
+                android:layout_height="0dp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
