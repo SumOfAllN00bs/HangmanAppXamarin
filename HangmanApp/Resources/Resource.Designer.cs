@@ -121,17 +121,17 @@ namespace HangmanApp
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f060015
-			public const int btn_LogOut = 2131099669;
+			// aapt resource value: 0x7f060016
+			public const int btn_LogOut = 2131099670;
 			
-			// aapt resource value: 0x7f060010
-			public const int btn_Login = 2131099664;
+			// aapt resource value: 0x7f060011
+			public const int btn_Login = 2131099665;
 			
-			// aapt resource value: 0x7f060013
-			public const int btn_Start = 2131099667;
+			// aapt resource value: 0x7f060014
+			public const int btn_Start = 2131099668;
 			
-			// aapt resource value: 0x7f06000b
-			public const int edt_Username = 2131099659;
+			// aapt resource value: 0x7f06000c
+			public const int edt_Username = 2131099660;
 			
 			// aapt resource value: 0x7f060000
 			public const int img_GameBackground = 2131099648;
@@ -139,53 +139,56 @@ namespace HangmanApp
 			// aapt resource value: 0x7f060002
 			public const int img_Hanging = 2131099650;
 			
-			// aapt resource value: 0x7f060008
-			public const int img_LoginBackground = 2131099656;
+			// aapt resource value: 0x7f060009
+			public const int img_LoginBackground = 2131099657;
 			
-			// aapt resource value: 0x7f060016
-			public const int img_OptionsBackground = 2131099670;
+			// aapt resource value: 0x7f060017
+			public const int img_OptionsBackground = 2131099671;
 			
-			// aapt resource value: 0x7f060012
-			public const int img_Splash = 2131099666;
+			// aapt resource value: 0x7f060013
+			public const int img_Splash = 2131099667;
+			
+			// aapt resource value: 0x7f060007
+			public const int ll_Arow = 2131099655;
 			
 			// aapt resource value: 0x7f060006
-			public const int ll_Arow = 2131099654;
-			
-			// aapt resource value: 0x7f060005
-			public const int ll_Qrow = 2131099653;
+			public const int ll_Qrow = 2131099654;
 			
 			// aapt resource value: 0x7f060001
 			public const int ll_TopLayout = 2131099649;
 			
-			// aapt resource value: 0x7f060007
-			public const int ll_Zrow = 2131099655;
+			// aapt resource value: 0x7f060008
+			public const int ll_Zrow = 2131099656;
 			
-			// aapt resource value: 0x7f060011
-			public const int mainLayout = 2131099665;
-			
-			// aapt resource value: 0x7f06000d
-			public const int rb_Easy = 2131099661;
-			
-			// aapt resource value: 0x7f06000f
-			public const int rb_Hard = 2131099663;
+			// aapt resource value: 0x7f060012
+			public const int mainLayout = 2131099666;
 			
 			// aapt resource value: 0x7f06000e
-			public const int rb_Normal = 2131099662;
+			public const int rb_Easy = 2131099662;
 			
-			// aapt resource value: 0x7f06000c
-			public const int rg_Difficulty = 2131099660;
+			// aapt resource value: 0x7f060010
+			public const int rb_Hard = 2131099664;
 			
-			// aapt resource value: 0x7f060009
-			public const int txt_LoginWelcome = 2131099657;
+			// aapt resource value: 0x7f06000f
+			public const int rb_Normal = 2131099663;
+			
+			// aapt resource value: 0x7f06000d
+			public const int rg_Difficulty = 2131099661;
+			
+			// aapt resource value: 0x7f060005
+			public const int txt_ChanceDisplay = 2131099653;
+			
+			// aapt resource value: 0x7f06000a
+			public const int txt_LoginWelcome = 2131099658;
 			
 			// aapt resource value: 0x7f060004
 			public const int txt_ScoreDisplay = 2131099652;
 			
-			// aapt resource value: 0x7f06000a
-			public const int txt_UsernamePrompt = 2131099658;
+			// aapt resource value: 0x7f06000b
+			public const int txt_UsernamePrompt = 2131099659;
 			
-			// aapt resource value: 0x7f060014
-			public const int txt_Welcome = 2131099668;
+			// aapt resource value: 0x7f060015
+			public const int txt_Welcome = 2131099669;
 			
 			// aapt resource value: 0x7f060003
 			public const int txt_WordDisplay = 2131099651;

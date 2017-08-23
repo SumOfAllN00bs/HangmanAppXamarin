@@ -31,7 +31,7 @@ namespace HangmanApp
         Database db = new Database();
         TextView txt_WordDisplay;
         TextView txt_ScoreDisplay;
-        string WordToGuess;
+        TextView txt_ChanceDisplay;
         ImageView img_Hang;
         List<int> HangingImageResources;
         LinearLayout qRow;
@@ -39,25 +39,34 @@ namespace HangmanApp
         LinearLayout zRow;
         List<Button> QwertyList;
         ImageView bckGround;
+        string WordToGuess;
         int difficulty;
-
+        int chancesLeft;
+        int score;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Game);
-            string dbPath = Helper.GetLocalFilePath("words.db3");
+
+            //misc
             difficulty = db.CurrentOptions(this).Difficulty;
+            score = 0;
+            //database and words
+            string dbPath = Helper.GetLocalFilePath("words.db3");
             Database db_Words = new Database(dbPath);
             WordToGuess = db_Words.GetRandomWord(difficulty);
             QwertyList = new List<Button>();
+            //controls
             txt_WordDisplay = FindViewById<TextView>(Resource.Id.txt_WordDisplay);
             txt_ScoreDisplay = FindViewById<TextView>(Resource.Id.txt_ScoreDisplay);
+            txt_ChanceDisplay = FindViewById<TextView>(Resource.Id.txt_ChanceDisplay);
             qRow = FindViewById<LinearLayout>(Resource.Id.ll_Qrow);
             aRow = FindViewById<LinearLayout>(Resource.Id.ll_Arow);
             zRow = FindViewById<LinearLayout>(Resource.Id.ll_Zrow);
             bckGround = FindViewById<ImageView>(Resource.Id.img_GameBackground);
             img_Hang = FindViewById<ImageView>(Resource.Id.img_Hanging);
+            //timer
             ts.animTimer = new Timer(50); //50 means 20 frames per second 33 means 30 frames per second
 
             //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
@@ -88,6 +97,11 @@ namespace HangmanApp
                 default:
                     break;
             }
+            chancesLeft = HangingImageResources.Count();
+            txt_ChanceDisplay.Text = "Chances left: " + chancesLeft;
+            txt_ScoreDisplay.Text = "Score: " + score;
+
+            //setup 3 rows filled with the letters
             foreach (LinearLayout item in new List<LinearLayout>() { qRow, aRow, zRow })
             {
                 string rowOfCharacters = "";
@@ -107,7 +121,6 @@ namespace HangmanApp
                 }
                 item.SetGravity(GravityFlags.CenterHorizontal);
                 bckGround.SetBackgroundResource(Resource.Drawable.BackGround);
-
             }
         }
 
@@ -124,6 +137,7 @@ namespace HangmanApp
                  * to reflect that
                  */
                 string tmp = "";
+                int scoreBefore = score;
                 for (int i = 0; i < WordToGuess.Length; i++)                                            //for every letter in the word to be guessed
                 {
                     if (txt_WordDisplay.Text[i*2] == '_')                                               //check if we have already guessed it
@@ -131,6 +145,8 @@ namespace HangmanApp
                         if (WordToGuess[i].ToString().ToLower() == (sender as Button).Text.ToLower())   //  check if this is a successful guess in this spot
                         {
                             tmp = tmp + (sender as Button).Text.ToUpper() + ' ';                        //      preserve the spacing and use the button to store the correct guess
+                            score += 10;
+                            txt_ScoreDisplay.Text = "Score: " + score;
                         }
                         else                                                                            //  this was unsuccessful so just keep hidden and move on
                         {
@@ -142,11 +158,20 @@ namespace HangmanApp
                         tmp = tmp + txt_WordDisplay.Text[i * 2] + ' ';
                     }
                 }
-
+                if (score - scoreBefore != 0)
+                {
+                    Toast.MakeText(this, "Points: " + (score - scoreBefore), ToastLength.Short).Show();
+                }
                 txt_WordDisplay.Text = tmp;
                 if (!tmp.Contains("_"))
                 {
                     //all characters have now been correctly guessed
+                    if (chancesLeft != 0) //don't exactly know if I should check this but best be carefull for now
+                    {
+                        txt_ChanceDisplay.SetTextSize(Android.Util.ComplexUnitType.Dip, txt_ChanceDisplay.TextSize + 5);
+                        txt_ChanceDisplay.Text = "You Win";
+                        StopPlaying();
+                    }
                 }
                 //before leaving this we have to disable the button because there is no sense in letting the player guess the same guess
                 (sender as Button).Enabled = false;
@@ -155,8 +180,16 @@ namespace HangmanApp
             {
                 //the word didn't have this letter
                 ts.animTimer.Enabled = true;
-                ts.animTimer.Elapsed += AnimTimer_Elapsed; ;
+                ts.animTimer.Elapsed += AnimTimer_Elapsed;
                 ts.animTimer.Start();
+                chancesLeft--;
+                txt_ChanceDisplay.Text = "Chances left: " + chancesLeft;
+                if (chancesLeft == 0)
+                {
+                    txt_ChanceDisplay.SetTextSize(Android.Util.ComplexUnitType.Dip, txt_ChanceDisplay.TextSize + 5);
+                    txt_ChanceDisplay.Text = "You Lose";
+                    StopPlaying();
+                }
                 (sender as Button).Enabled = false;
             }
         }
@@ -179,6 +212,15 @@ namespace HangmanApp
                 RunOnUiThread(() => { bckGround.SetImageResource(Resource.Drawable.BackGround2); });
             else
                 RunOnUiThread(() => { bckGround.SetImageResource(Resource.Drawable.BackGround); });
+        }
+
+        public void StopPlaying()
+        {
+            foreach (Button letterButton in QwertyList)
+            {
+                letterButton.Enabled = false;
+            }
+            txt_WordDisplay.Text = "Word was: \n" + string.Join("", WordToGuess.Select(l => l + " ").ToArray());
         }
     }
 }

@@ -38,7 +38,7 @@ namespace HangmanApp
             
             if (db.IsLoggedIn())
             {
-                txt_Welcome.Text = "Welcome " + db.LoggedInAccount(this).Username + " To The HangMan Game";
+                txt_Welcome.Text = "Welcome " + db.LoggedInAccount(this).Username + "\n To The HangMan Game";
                 btn_LogOut.Visibility = ViewStates.Visible;
             }
             Helper.SetFonts(Assets, new List<View>()
