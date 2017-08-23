@@ -10,16 +10,28 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics.Drawables;
+using Android.Views.Animations;
+using System.Timers;
 
 namespace HangmanApp
 {
     [Activity(Label = "GameActivity")]
     public class GameActivity : Activity
     {
+        class timerState
+        {
+            public int Counter { get; set; }
+            public Timer animTimer;
+            public timerState()
+            {
+                Counter = 0;
+            }
+        }
+        timerState ts = new timerState();
         Database db = new Database();
         TextView txt_WordDisplay;
+        TextView txt_ScoreDisplay;
         string WordToGuess;
-        AnimationDrawable BackGroundAnimation;
         ImageView img_Hang;
         List<int> HangingImageResources;
         LinearLayout qRow;
@@ -28,6 +40,7 @@ namespace HangmanApp
         List<Button> QwertyList;
         ImageView bckGround;
         int difficulty;
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -39,11 +52,13 @@ namespace HangmanApp
             WordToGuess = db_Words.GetRandomWord(difficulty);
             QwertyList = new List<Button>();
             txt_WordDisplay = FindViewById<TextView>(Resource.Id.txt_WordDisplay);
+            txt_ScoreDisplay = FindViewById<TextView>(Resource.Id.txt_ScoreDisplay);
             qRow = FindViewById<LinearLayout>(Resource.Id.ll_Qrow);
             aRow = FindViewById<LinearLayout>(Resource.Id.ll_Arow);
             zRow = FindViewById<LinearLayout>(Resource.Id.ll_Zrow);
             bckGround = FindViewById<ImageView>(Resource.Id.img_GameBackground);
             img_Hang = FindViewById<ImageView>(Resource.Id.img_Hanging);
+            ts.animTimer = new Timer(50); //50 means 20 frames per second 33 means 30 frames per second
 
             //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
             Toast.MakeText(this, WordToGuess, ToastLength.Long).Show();
@@ -91,7 +106,7 @@ namespace HangmanApp
                     QwertyList.Add(btn_newButton);
                 }
                 item.SetGravity(GravityFlags.CenterHorizontal);
-                bckGround.SetImageResource(Resource.Drawable.BackGround);
+                bckGround.SetBackgroundResource(Resource.Drawable.BackGround);
 
             }
         }
@@ -139,11 +154,31 @@ namespace HangmanApp
             else
             {
                 //the word didn't have this letter
-                bckGround.SetImageDrawable(BackGroundAnimation);
-                BackGroundAnimation = (AnimationDrawable) Resources.GetDrawable(Resource.Drawable.AnimationMistake);
-                BackGroundAnimation.Start();
+                ts.animTimer.Enabled = true;
+                ts.animTimer.Elapsed += AnimTimer_Elapsed; ;
+                ts.animTimer.Start();
                 (sender as Button).Enabled = false;
             }
+        }
+
+        private void AnimTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //using animationDrawable and viewAnimation and Animation never seemed to work
+            //I'd get all sorts of errors or visual glitches
+            //so an animation using a simple timer seemed the most likely way to get animation to work
+            //btw this animation is just a little warning to the player that an error occured
+            if (ts.Counter >= 25) //framerate of 20 per second 20 = 1 sec roughly
+            {
+                ts.animTimer.Stop();
+                ts.animTimer.Enabled = false;
+                ts.Counter = 0;
+                return;
+            }
+            ts.Counter++;
+            if (ts.Counter % 2 == 0)
+                RunOnUiThread(() => { bckGround.SetImageResource(Resource.Drawable.BackGround2); });
+            else
+                RunOnUiThread(() => { bckGround.SetImageResource(Resource.Drawable.BackGround); });
         }
     }
 }
