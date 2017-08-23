@@ -14,12 +14,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/ll_TopLayout">
+        <ImageView
+            android:id="@+id/img_Hanging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="35"
+            android:scaleType="center"
+            android:background="#00aadd"
+            android:layout_margin="5dp" />
         <TextView
             android:text="_ _ _ _ _ _ _ _"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="match_parent"
+            android:layout_weight="15"
             android:layout_height="wrap_content"
-            android:layout_weight="55"
             android:id="@+id/txt_WordDisplay"
             android:gravity="center"
             android:textColor="@android:color/black"
