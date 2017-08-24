@@ -45,6 +45,7 @@ namespace HangmanApp
         int difficulty;
         int chancesLeft;
         int score;
+        bool RestoreButtons = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -72,6 +73,18 @@ namespace HangmanApp
             img_Hang = FindViewById<ImageView>(Resource.Id.img_Hanging);
             //timer
             ts.animTimer = new Timer(50); //50 means 20 frames per second 33 means 30 frames per second
+
+            //State Management
+            if (savedInstanceState != null)
+            {
+                difficulty = savedInstanceState.GetInt("difficulty", difficulty);
+                score = savedInstanceState.GetInt("score", score);
+                WordToGuess = savedInstanceState.GetString("WordToGuess", WordToGuess);
+                if (savedInstanceState.GetBooleanArray("buttonEnabledArray") != null)
+                {
+                    RestoreButtons = true;
+                }
+            }
 
             //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
             Toast.MakeText(this, WordToGuess, ToastLength.Long).Show();
@@ -101,7 +114,10 @@ namespace HangmanApp
                 default:
                     break;
             }
-            chancesLeft = HangingImageResources.Count();
+            if (savedInstanceState != null)
+                chancesLeft = savedInstanceState.GetInt("chancesLeft", chancesLeft);
+            else
+                chancesLeft = HangingImageResources.Count();
             txt_ChanceDisplay.Text = "Chances left: " + chancesLeft;
             txt_ScoreDisplay.Text = "Score: " + score;
             btn_NewGame.Click += Btn_NewGame_Click;
@@ -128,6 +144,14 @@ namespace HangmanApp
                 item.SetGravity(GravityFlags.CenterHorizontal);
                 bckGround.SetBackgroundResource(Resource.Drawable.BackGround);
             }
+            if (RestoreButtons)
+            {
+                var boolA = savedInstanceState.GetBooleanArray("buttonEnabledArray");
+                for (int i = 0; i < boolA.Length; i++)
+                {
+                    QwertyList[i].Enabled = boolA[i];
+                }
+            }
             Helper.SetFonts(Assets, new List<View>() //set the fonts of the controls
                                     {
                                         txt_WordDisplay,
@@ -137,6 +161,21 @@ namespace HangmanApp
                                         btn_Quit
                                     });
             Helper.SetFonts(Assets, QwertyList.Select(b => (View)b).ToList()); //set the fonts of the alphabetical buttons
+        }
+        protected override void OnSaveInstanceState(Bundle outState)
+        {
+            ts.animTimer.Stop();
+            ts.animTimer.Enabled = false;
+            ts.Counter = 0;
+            RunOnUiThread(() => { bckGround.SetImageResource(Resource.Drawable.BackGround); });
+            var buttonEnabledArray = QwertyList.Select(b => b.Enabled).ToArray();
+
+            outState.PutBooleanArray("buttonEnabledArray", buttonEnabledArray);
+            outState.PutInt("difficulty", difficulty);
+            outState.PutInt("score", score);
+            outState.PutInt("chancesLeft", chancesLeft);
+            outState.PutString("WordToGuess", WordToGuess);
+            base.OnSaveInstanceState(outState);
         }
 
         private void Btn_Quit_Click(object sender, EventArgs e)
@@ -179,7 +218,7 @@ namespace HangmanApp
                             tmp = tmp + "_ ";
                         }
                     }
-                    else                                                                                //We have already guessed it just ad it to the display
+                    else                                                                                //We have already guessed it just add it to the display
                     {
                         tmp = tmp + txt_WordDisplay.Text[i * 2] + ' ';
                     }
