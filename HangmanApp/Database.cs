@@ -70,7 +70,7 @@ namespace HangmanApp
                 int? loggedInID = table.FirstOrDefault().LoggedInAccountID;
                 if (loggedInID == null)
                 {
-                    Toast.MakeText(_context, "Error: no Id Stored", ToastLength.Short).Show();
+                    Helper.DisplayMessage(_context, "Error: no Id Stored");
                     return null;
                 }
                 var accountTable = db.Table<Account>();
@@ -79,8 +79,7 @@ namespace HangmanApp
             }
             else
             {
-                Console.Write("Error: NotLoggedIn");
-                Toast.MakeText(_context, "Error: NotLoggedIn", ToastLength.Short).Show();
+                Helper.DisplayMessage(_context, "Error: NotLoggedIn");
                 return null;
             }
         }

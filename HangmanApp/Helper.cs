@@ -17,6 +17,19 @@ namespace HangmanApp
 {
     public class Helper
     {
+        private static Toast singleToast;
+        public static void DisplayMessage(Context _context, string message, ToastLength t = ToastLength.Short)
+        {
+            if (singleToast != null)
+            {
+                singleToast.Cancel();
+            }
+            if (!string.IsNullOrEmpty(message) && _context != null)
+            {
+                singleToast = Toast.MakeText(_context, message, t);
+                singleToast.Show();
+            }
+        }
         public static void SetFonts(AssetManager Assets,List<View> controls)
         {
             var font = Typeface.CreateFromAsset(Assets, "iosevka-regular.ttf");
@@ -34,7 +47,6 @@ namespace HangmanApp
 
             return dbPath;
         }
-
         private static void CopyDatabaseIfNotExists(string dbPath)
         {
             if (!File.Exists(dbPath))

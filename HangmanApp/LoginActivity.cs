@@ -82,7 +82,7 @@ namespace HangmanApp
         {
             if (string.IsNullOrWhiteSpace(edt_Username.Text) || edt_Username.Text.Length < 1)
             {
-                Toast.MakeText(this, "Please enter a valid username", ToastLength.Short).Show();
+                Helper.DisplayMessage(this, "Please enter a valid username");
                 return;
             }
             db.Login(edt_Username.Text, difficulty);

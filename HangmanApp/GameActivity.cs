@@ -45,7 +45,7 @@ namespace HangmanApp
         int difficulty;
         int chancesLeft;
         int score;
-        bool RestoreButtons = false;
+        bool Restore = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -82,14 +82,17 @@ namespace HangmanApp
                 WordToGuess = savedInstanceState.GetString("WordToGuess", WordToGuess);
                 if (savedInstanceState.GetBooleanArray("buttonEnabledArray") != null)
                 {
-                    RestoreButtons = true;
+                    Restore = true;
                 }
             }
 
             //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
-            Toast.MakeText(this, WordToGuess, ToastLength.Long).Show();
+            Helper.DisplayMessage(this, WordToGuess, ToastLength.Long);
 
-            txt_WordDisplay.Text = string.Join("", Enumerable.Repeat("_ ", WordToGuess.Length).ToArray());
+            if (Restore)
+                txt_WordDisplay.Text = savedInstanceState.GetString("WordDisplay", string.Join("", Enumerable.Repeat("_ ", WordToGuess.Length).ToArray()));
+            else
+                txt_WordDisplay.Text = string.Join("", Enumerable.Repeat("_ ", WordToGuess.Length).ToArray());
             HangingImageResources = new List<int>();
             switch (difficulty)
             {
@@ -120,6 +123,8 @@ namespace HangmanApp
                 chancesLeft = HangingImageResources.Count();
             txt_ChanceDisplay.Text = "Chances left: " + chancesLeft;
             txt_ScoreDisplay.Text = "Score: " + score;
+            bckGround.SetBackgroundResource(Resource.Drawable.BackGround);
+            img_Hang.SetImageResource(Resource.Drawable.blank);
             btn_NewGame.Click += Btn_NewGame_Click;
             btn_Quit.Click += Btn_Quit_Click;
 
@@ -136,21 +141,21 @@ namespace HangmanApp
                     Button btn_newButton = new Button(this);
                     btn_newButton.Text = c.ToString().ToUpper();
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                    param.SetMargins(1, 2, 0, 1);
+                    param.SetMargins(1, 1, 0, 0);
                     item.AddView(btn_newButton, param);
                     btn_newButton.Click += LetterClicked;
                     QwertyList.Add(btn_newButton);
                 }
                 item.SetGravity(GravityFlags.CenterHorizontal);
-                bckGround.SetBackgroundResource(Resource.Drawable.BackGround);
             }
-            if (RestoreButtons)
+            if (Restore)
             {
                 var boolA = savedInstanceState.GetBooleanArray("buttonEnabledArray");
                 for (int i = 0; i < boolA.Length; i++)
                 {
                     QwertyList[i].Enabled = boolA[i];
                 }
+                img_Hang.SetImageResource(HangingImageResources[Math.Abs(chancesLeft - HangingImageResources.Count) - 1]);
             }
             Helper.SetFonts(Assets, new List<View>() //set the fonts of the controls
                                     {
@@ -175,6 +180,7 @@ namespace HangmanApp
             outState.PutInt("score", score);
             outState.PutInt("chancesLeft", chancesLeft);
             outState.PutString("WordToGuess", WordToGuess);
+            outState.PutString("WordDisplay", txt_WordDisplay.Text);
             base.OnSaveInstanceState(outState);
         }
 
@@ -186,7 +192,9 @@ namespace HangmanApp
 
         private void Btn_NewGame_Click(object sender, EventArgs e)
         {
-            Recreate();
+            //this seems the best way to avoid triggering a restoration of state
+            StartActivity(typeof(GameActivity)); 
+            Finish();
         }
 
         private void LetterClicked(object sender, EventArgs e)
@@ -225,7 +233,7 @@ namespace HangmanApp
                 }
                 if (score - scoreBefore != 0)
                 {
-                    Toast.MakeText(this, "Points: " + (score - scoreBefore), ToastLength.Short).Show();
+                    Helper.DisplayMessage(this, "Points: " + (score - scoreBefore));
                 }
                 txt_WordDisplay.Text = tmp;
                 if (!tmp.Contains("_"))
