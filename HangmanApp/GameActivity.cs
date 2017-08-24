@@ -34,6 +34,8 @@ namespace HangmanApp
         TextView txt_ChanceDisplay;
         ImageView img_Hang;
         List<int> HangingImageResources;
+        Button btn_NewGame;
+        Button btn_Quit;
         LinearLayout qRow;
         LinearLayout aRow;
         LinearLayout zRow;
@@ -61,6 +63,8 @@ namespace HangmanApp
             txt_WordDisplay = FindViewById<TextView>(Resource.Id.txt_WordDisplay);
             txt_ScoreDisplay = FindViewById<TextView>(Resource.Id.txt_ScoreDisplay);
             txt_ChanceDisplay = FindViewById<TextView>(Resource.Id.txt_ChanceDisplay);
+            btn_NewGame = FindViewById<Button>(Resource.Id.btn_NewGame);
+            btn_Quit = FindViewById<Button>(Resource.Id.btn_Quit);
             qRow = FindViewById<LinearLayout>(Resource.Id.ll_Qrow);
             aRow = FindViewById<LinearLayout>(Resource.Id.ll_Arow);
             zRow = FindViewById<LinearLayout>(Resource.Id.ll_Zrow);
@@ -100,6 +104,8 @@ namespace HangmanApp
             chancesLeft = HangingImageResources.Count();
             txt_ChanceDisplay.Text = "Chances left: " + chancesLeft;
             txt_ScoreDisplay.Text = "Score: " + score;
+            btn_NewGame.Click += Btn_NewGame_Click;
+            btn_Quit.Click += Btn_Quit_Click;
 
             //setup 3 rows filled with the letters
             foreach (LinearLayout item in new List<LinearLayout>() { qRow, aRow, zRow })
@@ -122,13 +128,26 @@ namespace HangmanApp
                 item.SetGravity(GravityFlags.CenterHorizontal);
                 bckGround.SetBackgroundResource(Resource.Drawable.BackGround);
             }
-            Helper.SetFonts(Assets, new List<View>()
+            Helper.SetFonts(Assets, new List<View>() //set the fonts of the controls
                                     {
                                         txt_WordDisplay,
                                         txt_ScoreDisplay,
-                                        txt_ChanceDisplay
+                                        txt_ChanceDisplay,
+                                        btn_NewGame,
+                                        btn_Quit
                                     });
-            Helper.SetFonts(Assets, QwertyList.Select(b => (View)b).ToList());
+            Helper.SetFonts(Assets, QwertyList.Select(b => (View)b).ToList()); //set the fonts of the alphabetical buttons
+        }
+
+        private void Btn_Quit_Click(object sender, EventArgs e)
+        {
+            StartActivity(typeof(MainActivity));
+            Finish();
+        }
+
+        private void Btn_NewGame_Click(object sender, EventArgs e)
+        {
+            Recreate();
         }
 
         private void LetterClicked(object sender, EventArgs e)
@@ -152,7 +171,7 @@ namespace HangmanApp
                         if (WordToGuess[i].ToString().ToLower() == (sender as Button).Text.ToLower())   //  check if this is a successful guess in this spot
                         {
                             tmp = tmp + (sender as Button).Text.ToUpper() + ' ';                        //      preserve the spacing and use the button to store the correct guess
-                            score += 10 * (difficulty / 2);
+                            score += 10 * difficulty;
                             txt_ScoreDisplay.Text = "Score: " + score;
                         }
                         else                                                                            //  this was unsuccessful so just keep hidden and move on
@@ -239,8 +258,9 @@ namespace HangmanApp
                 letterButton.Enabled = false;
             }
             txt_WordDisplay.Text = "Word was: \n" + string.Join("", WordToGuess.Select(l => l.ToString().ToUpper() + " ").ToArray());
-            Account player = db.LoggedInAccount(this);
-            db.SaveNewHighscore(player, score);
+            db.SaveNewHighscore(db.LoggedInAccount(this), score);
+            btn_NewGame.Visibility = ViewStates.Visible;
+            btn_Quit.Visibility = ViewStates.Visible;
         }
     }
 }

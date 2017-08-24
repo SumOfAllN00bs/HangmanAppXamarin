@@ -86,7 +86,7 @@ namespace HangmanApp
                 return;
             }
             db.Login(edt_Username.Text, difficulty);
-            StartActivity(typeof(GameActivity));
+            StartActivity(typeof(MainActivity));
             Finish();
         }
     }

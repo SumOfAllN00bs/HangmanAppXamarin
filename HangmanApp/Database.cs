@@ -99,7 +99,7 @@ namespace HangmanApp
             return _options;
         }
 
-        public bool Login(string username, int difficulty) //perform the action of logging in
+        public bool Login(string username, int difficulty, bool force = false) //perform the action of logging in
         {
             if (IsWordDatabase)
             {
@@ -120,7 +120,20 @@ namespace HangmanApp
                     break;
                 }
             }
-            if (check && logInAccount != null)
+            if (force && check && logInAccount != null)
+            {
+                db.CreateTable<Options>();
+                var optionsTable = db.Table<Options>();
+                Options o = optionsTable.FirstOrDefault();
+                logInAccount.AccountOptions = db.Get<Options>(opt => opt.ID == logInAccount.AccountOptionsID);
+                logInAccount.AccountOptions.Difficulty = difficulty;
+                o.Difficulty = difficulty;
+                o.IsLoggedIn = true;
+                o.LoggedInAccountID = logInAccount.ID;
+                db.Update(o);
+                return true;
+            }
+            else if (!force && check && logInAccount != null)
             {
                 //account already exists just load it
                 //deal with game options. 1 copy of options should be id 1 and will be default options for game when loading an existing profile the options stored in profile are loaded
@@ -167,7 +180,8 @@ namespace HangmanApp
                 db.Update(o);
 
                 //finally insert options created in new account
-                int newAccountOptionsID = db.Insert(logInAccount.AccountOptions);
+                db.Insert(logInAccount.AccountOptions);
+                int newAccountOptionsID = logInAccount.AccountOptions.ID; //this here caused me so much problems.
                 logInAccount.AccountOptionsID = newAccountOptionsID;
                 db.Update(logInAccount); // after already inserting the new account I have to update it aftwards with the id of the accountoptions that I get back after inserting the account options
                 //there has got to be a better way :)
@@ -187,19 +201,10 @@ namespace HangmanApp
             SQLiteConnection db = new SQLiteConnection(dbPath);
             db.CreateTable<Account>();
             var table = db.Table<Account>();
-            //first check if account already exists
-            bool check = false;
-            Account logInAccount = null;
-            foreach (Account A in table)
-            {
-                if (A.Username == player.Username)
-                {
-                    check = true;
-                    logInAccount = A;
-                    break;
-                }
-            }
+
+            Account logInAccount = db.Get<Account>(a => a.ID == player.ID);
             logInAccount.HighestScore = Math.Max(logInAccount.HighestScore, score);
+            db.Update(logInAccount);
         }
 
         //word database

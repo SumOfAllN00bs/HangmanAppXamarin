@@ -31,6 +31,7 @@ namespace HangmanApp
 
             SetContentView(Resource.Layout.Options);
             db = new Database();
+            difficulty = 2; //default selected radio button is normal which is 2
             txt_OptionsWelcome = FindViewById<TextView>(Resource.Id.txt_OptionsWelcome);
             txt_HighScore = FindViewById<TextView>(Resource.Id.txt_HighScore);
             txt_Difficulty = FindViewById<TextView>(Resource.Id.txt_OptionDifficulty);
@@ -57,7 +58,7 @@ namespace HangmanApp
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            db.Login(db.LoggedInAccount(this).Username, difficulty);
+            db.Login(db.LoggedInAccount(this).Username, difficulty, true);
         }
 
         private void Rb_Difficulty_Click(object sender, EventArgs e)

@@ -64,6 +64,19 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="50dp" />
         </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_NewGame"
+            android:visibility="gone"
+            android:text="New Game" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_Quit"
+            android:visibility="gone"
+            android:text="Quit" />
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
