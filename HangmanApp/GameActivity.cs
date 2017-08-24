@@ -87,7 +87,7 @@ namespace HangmanApp
             }
 
             //Toast.MakeText(this, "Difficulty: " + db.CurrentOptions(this).Difficulty, ToastLength.Long).Show();
-            Helper.DisplayMessage(this, WordToGuess, ToastLength.Long);
+            //Helper.DisplayMessage(this, WordToGuess, ToastLength.Long);
 
             if (Restore)
                 txt_WordDisplay.Text = savedInstanceState.GetString("WordDisplay", string.Join("", Enumerable.Repeat("_ ", WordToGuess.Length).ToArray()));
