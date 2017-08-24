@@ -122,6 +122,13 @@ namespace HangmanApp
                 item.SetGravity(GravityFlags.CenterHorizontal);
                 bckGround.SetBackgroundResource(Resource.Drawable.BackGround);
             }
+            Helper.SetFonts(Assets, new List<View>()
+                                    {
+                                        txt_WordDisplay,
+                                        txt_ScoreDisplay,
+                                        txt_ChanceDisplay
+                                    });
+            Helper.SetFonts(Assets, QwertyList.Select(b => (View)b).ToList());
         }
 
         private void LetterClicked(object sender, EventArgs e)
@@ -145,7 +152,7 @@ namespace HangmanApp
                         if (WordToGuess[i].ToString().ToLower() == (sender as Button).Text.ToLower())   //  check if this is a successful guess in this spot
                         {
                             tmp = tmp + (sender as Button).Text.ToUpper() + ' ';                        //      preserve the spacing and use the button to store the correct guess
-                            score += 10;
+                            score += 10 * (difficulty / 2);
                             txt_ScoreDisplay.Text = "Score: " + score;
                         }
                         else                                                                            //  this was unsuccessful so just keep hidden and move on
@@ -168,7 +175,7 @@ namespace HangmanApp
                     //all characters have now been correctly guessed
                     if (chancesLeft != 0) //don't exactly know if I should check this but best be carefull for now
                     {
-                        txt_ChanceDisplay.SetTextSize(Android.Util.ComplexUnitType.Dip, txt_ChanceDisplay.TextSize + 5);
+                        txt_ChanceDisplay.SetTextSize(Android.Util.ComplexUnitType.Dip, txt_ChanceDisplay.TextSize + 2);
                         txt_ChanceDisplay.Text = "You Win";
                         StopPlaying();
                     }
@@ -186,11 +193,21 @@ namespace HangmanApp
                 txt_ChanceDisplay.Text = "Chances left: " + chancesLeft;
                 if (chancesLeft == 0)
                 {
-                    txt_ChanceDisplay.SetTextSize(Android.Util.ComplexUnitType.Dip, txt_ChanceDisplay.TextSize + 5);
+                    txt_ChanceDisplay.SetTextSize(Android.Util.ComplexUnitType.Dip, txt_ChanceDisplay.TextSize + 2);
                     txt_ChanceDisplay.Text = "You Lose";
                     StopPlaying();
                 }
+                //#Rambling
+                //Math.Abs(chancesLeft - HangingImageResource.Count)
+                //this flips the number of chances into its inverse
+                //on easy mode you get 9 chances and there will be 9 corresponding images saved into HangingImageResources
+                //and so at the start of the game chancesLeft should be 9 and at this point we have passed chancesLeft-- so
+                //and so we have to load the first image
+                //which is 0 index so to get the 0 index based on the number nine you take away 9 or (chancesLeft - HangingImageResources.Count)
+                //if you have a different difficulty then HangingImageResources.Count returns the chances for that difficulty
+                RunOnUiThread(() => { img_Hang.SetImageResource(HangingImageResources[Math.Abs(chancesLeft - HangingImageResources.Count) - 1]); });
                 (sender as Button).Enabled = false;
+
             }
         }
 
@@ -205,6 +222,7 @@ namespace HangmanApp
                 ts.animTimer.Stop();
                 ts.animTimer.Enabled = false;
                 ts.Counter = 0;
+                RunOnUiThread(() => { bckGround.SetImageResource(Resource.Drawable.BackGround); });
                 return;
             }
             ts.Counter++;
@@ -220,7 +238,9 @@ namespace HangmanApp
             {
                 letterButton.Enabled = false;
             }
-            txt_WordDisplay.Text = "Word was: \n" + string.Join("", WordToGuess.Select(l => l + " ").ToArray());
+            txt_WordDisplay.Text = "Word was: \n" + string.Join("", WordToGuess.Select(l => l.ToString().ToUpper() + " ").ToArray());
+            Account player = db.LoggedInAccount(this);
+            db.SaveNewHighscore(player, score);
         }
     }
 }

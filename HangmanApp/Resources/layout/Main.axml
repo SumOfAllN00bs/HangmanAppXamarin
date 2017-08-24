@@ -28,10 +28,19 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="15dp" />
     <Button
-        android:id="@+id/btn_LogOut"
+        android:id="@+id/btn_Account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_Start"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Options" />
+    <Button
+        android:id="@+id/btn_LogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_Account"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"

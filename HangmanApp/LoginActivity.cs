@@ -15,6 +15,9 @@ namespace HangmanApp
     [Activity(Label = "LoginActivity")]
     public class LoginActivity : Activity
     {
+        TextView txt_LoginWelcome;
+        TextView txt_UserNamePrompt;
+        TextView txt_DifficultyPrompt;
         EditText edt_Username;
         Button btn_Login;
         RadioButton rb_Easy;
@@ -28,6 +31,9 @@ namespace HangmanApp
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Login);
             db = new Database();
+            txt_LoginWelcome = FindViewById<TextView>(Resource.Id.txt_LoginWelcome);
+            txt_UserNamePrompt = FindViewById<TextView>(Resource.Id.txt_UsernamePrompt);
+            txt_DifficultyPrompt = FindViewById<TextView>(Resource.Id.txt_DifficultyPrompt);
             edt_Username = FindViewById<EditText>(Resource.Id.edt_Username);
             btn_Login = FindViewById<Button>(Resource.Id.btn_Login);
             rb_Easy = FindViewById<RadioButton>(Resource.Id.rb_Easy);
@@ -40,6 +46,17 @@ namespace HangmanApp
             rb_Normal.Click += Rb_Difficulty_Click;
             rb_Hard.Click += Rb_Difficulty_Click;
             bckGround.SetImageResource(Resource.Drawable.BackGround);
+            Helper.SetFonts(Assets, new List<View>()
+                                    {
+                                        txt_LoginWelcome,
+                                        txt_DifficultyPrompt,
+                                        txt_UserNamePrompt,
+                                        edt_Username,
+                                        btn_Login,
+                                        rb_Easy,
+                                        rb_Normal,
+                                        rb_Hard
+                                    });
         }
 
         private void Rb_Difficulty_Click(object sender, EventArgs e)

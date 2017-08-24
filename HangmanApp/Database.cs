@@ -19,6 +19,7 @@ namespace HangmanApp
     {
         string dbPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "dbHangman.db3");
         private bool isWordDatabase = false;
+        private Context _context;
         Random chaos = new Random();
         public bool IsWordDatabase
         {
@@ -37,6 +38,7 @@ namespace HangmanApp
             }
         }
 
+        //normal database
         public bool IsLoggedIn()
         {
             if (IsWordDatabase)
@@ -55,6 +57,7 @@ namespace HangmanApp
 
         public Account LoggedInAccount(Context activity)
         {
+            _context = activity;
             if (IsWordDatabase)
             {
                 return null;
@@ -67,7 +70,7 @@ namespace HangmanApp
                 int? loggedInID = table.FirstOrDefault().LoggedInAccountID;
                 if (loggedInID == null)
                 {
-                    Toast.MakeText(activity, "Error: no Id Stored", ToastLength.Short).Show();
+                    Toast.MakeText(_context, "Error: no Id Stored", ToastLength.Short).Show();
                     return null;
                 }
                 var accountTable = db.Table<Account>();
@@ -77,12 +80,14 @@ namespace HangmanApp
             else
             {
                 Console.Write("Error: NotLoggedIn");
-                Toast.MakeText(activity, "Error: NotLoggedIn", ToastLength.Short).Show();
+                Toast.MakeText(_context, "Error: NotLoggedIn", ToastLength.Short).Show();
                 return null;
             }
         }
+
         public Options CurrentOptions(Context activity)
         {
+            _context = activity;
             if (IsWordDatabase)
             {
                 return null;
@@ -93,6 +98,7 @@ namespace HangmanApp
             Options _options = table.FirstOrDefault();
             return _options;
         }
+
         public bool Login(string username, int difficulty) //perform the action of logging in
         {
             if (IsWordDatabase)
@@ -171,6 +177,32 @@ namespace HangmanApp
             throw new Exception("Unexpected Code Path");
             return false;
         }
+
+        public void SaveNewHighscore(Account player, int score)
+        {
+            if (IsWordDatabase)
+            {
+                return;
+            }
+            SQLiteConnection db = new SQLiteConnection(dbPath);
+            db.CreateTable<Account>();
+            var table = db.Table<Account>();
+            //first check if account already exists
+            bool check = false;
+            Account logInAccount = null;
+            foreach (Account A in table)
+            {
+                if (A.Username == player.Username)
+                {
+                    check = true;
+                    logInAccount = A;
+                    break;
+                }
+            }
+            logInAccount.HighestScore = Math.Max(logInAccount.HighestScore, score);
+        }
+
+        //word database
         public string GetRandomWord(int difficulty)
         {
             string returnWord = "?ERROR?";
@@ -184,7 +216,7 @@ namespace HangmanApp
                     //hardcoding actually makes the code way more simpler
                     //as far as I can tell
                     //122 is the first six letter word and 431 is the last eight letter word
-                    returnWord = table.ElementAt(chaos.Next(122, 431)).word; 
+                    returnWord = table.ElementAt(chaos.Next(122, 431)).word;
                     break;
                 case 2://normal
                     //1 is the first four letter word and 431 is the last eight letter word
@@ -200,5 +232,6 @@ namespace HangmanApp
             }
             return returnWord;
         }
+
     }
 }
